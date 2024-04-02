@@ -1,0 +1,14 @@
+
+.dashboard-default-container {
+  text-align: center;
+  margin-top: 50px; /* 根据需要调整上边距 */
+}
+
+.dashboard-default-container h2 {
+  margin-bottom: 10px; /* 根据需要调整下边距 */
+}
+
+.dashboard-default-container p {
+  font-style: italic; /* 斜体字样式 */
+  color: #555; /* 字体颜色 */
+}
