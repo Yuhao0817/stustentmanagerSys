@@ -1,23 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
+import axios from 'axios';
+// 定义前置URL
+// const BASE_URL = 'https://340b-43-243-192-92.ngrok-free.app/api';
 
 // 假数据
 const initialCourses = [
-  { id: 1, name: '数学', teacher: '张老师' },
-  { id: 2, name: '英语', teacher: '李老师' },
-  { id: 3, name: '物理', teacher: '王老师' },
-  { id: 4, name: '化学', teacher: '赵老师' },
+  { courseID: 1, title: '数学', credits: '张老师' },
+  { courseID: 2, title: '英语', credits: '李老师' },
+  { courseID: 3, title: '物理', credits: '王老师' },
+  { courseID: 4, title: '化学', credits: '赵老师' },
 ];
 
 // 课程信息组件
 const CourseInfo = ({ course, onUpdate, onDelete }) => {
   return (
     <tr>
-      <td>{course.id}</td>
-      <td>{course.name}</td>
-      <td>{course.teacher}</td>
+      <td>{course.courseID}</td>
+      <td>{course.title}</td>
+      <td>{course.credits}</td>
       <td>
         <button onClick={() => onUpdate(course)}>修改</button>
-        <button onClick={() => onDelete(course.id)}>删除</button>
+        <button onClick={() => onDelete(course.courseID)}>删除</button>
       </td>
     </tr>
   );
@@ -32,7 +35,7 @@ const CoursesList = ({ courses, onAdd, onUpdate, onDelete, onSearch }) => {
   };
 
   const filteredCourses = courses.filter(course =>
-    course.name.toLowerCase().includes(searchTerm.toLowerCase())
+    course.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -49,7 +52,7 @@ const CoursesList = ({ courses, onAdd, onUpdate, onDelete, onSearch }) => {
         </thead>
         <tbody>
           {filteredCourses.map(course => (
-            <CourseInfo key={course.id} course={course} onUpdate={onUpdate} onDelete={onDelete} />
+            <CourseInfo key={course.courseID} course={course} onUpdate={onUpdate} onDelete={onDelete} />
           ))}
         </tbody>
       </table>
@@ -59,16 +62,16 @@ const CoursesList = ({ courses, onAdd, onUpdate, onDelete, onSearch }) => {
 
 // 添加/修改课程弹框组件
 const CourseModal = ({ isOpen, onClose, onAdd, onUpdate, course }) => {
-  const [name, setName] = useState(course ? course.name : '');
-  const [teacher, setTeacher] = useState(course ? course.teacher : '');
+  const [title, setTitle] = useState(course ? course.title : '');
+  const [credits, setCredits] = useState(course ? course.credits : '');
 
   const handleSubmit = () => {
     if (course) {
       // 更新课程
-      onUpdate({ ...course, name, teacher });
+      onUpdate({ ...course, title, credits });
     } else {
       // 添加课程
-      onAdd({ id: Date.now(), name, teacher });
+      onAdd({ courseID: Date.now(), title, credits });
     }
     onClose();
   };
@@ -80,9 +83,9 @@ const CourseModal = ({ isOpen, onClose, onAdd, onUpdate, course }) => {
         <h2>{course ? '修改' : '添加'}课程</h2>
         <form onSubmit={handleSubmit}>
           <label>课程名称:</label>
-          <input type="text" value={name} onChange={e => setName(e.target.value)} required />
+          <input type="text" value={title} onChange={e => setTitle(e.target.value)} required />
           <label>授课教师:</label>
-          <input type="text" value={teacher} onChange={e => setTeacher(e.target.value)} required />
+          <input type="text" value={credits} onChange={e => setCredits(e.target.value)} required />
           <button type="submit">{course ? '保存' : '添加'}</button>
         </form>
       </div>
@@ -99,6 +102,29 @@ const CoursePage = () => {
 
   const openAddModal = () => setAddModalOpen(true);
   const closeAddModal = () => setAddModalOpen(false);
+
+
+  // 组件挂载后就调用接口获取数据
+  useEffect(() => {
+    fetchData(); 
+  }, []); 
+  
+  const fetchData = async () => {
+    try {
+      const response = await axios.get('https://340b-43-243-192-92.ngrok-free.app/api/course', {
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+      
+      const data = response; 
+      // setCourses(data); // 更新状态以使用获取的数据
+      console.log(data); 
+    } catch (error) {
+      console.error('获取数据有误:', error);
+    }
+  };
+
   const openEditModal = course => {
     setCurrentCourse(course);
     setEditModalOpen(true);
@@ -113,11 +139,11 @@ const CoursePage = () => {
   };
 
   const updateCourse = updatedCourse => {
-    setCourses(courses.map(course => course.id === updatedCourse.id ? updatedCourse : course));
+    setCourses(courses.map(course => course.courseID === updatedCourse.courseID ? updatedCourse : course));
   };
 
-  const deleteCourse = id => {
-    setCourses(courses.filter(course => course.id !== id));
+  const deleteCourse = courseID => {
+    setCourses(courses.filter(course => course.courseID !== courseID));
   };
 
   const submitCourses = () => {
