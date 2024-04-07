@@ -4,12 +4,7 @@ import axios from 'axios';
 // const BASE_URL = 'https://340b-43-243-192-92.ngrok-free.app/api';
 
 // 假数据
-const initialCourses = [
-  { courseID: 1, title: '数学', credits: '张老师' },
-  { courseID: 2, title: '英语', credits: '李老师' },
-  { courseID: 3, title: '物理', credits: '王老师' },
-  { courseID: 4, title: '化学', credits: '赵老师' },
-];
+const initialCourses = [];
 
 // 课程信息组件
 const CourseInfo = ({ course, onUpdate, onDelete }) => {
@@ -111,14 +106,14 @@ const CoursePage = () => {
   
   const fetchData = async () => {
     try {
-      const response = await axios.get('https://340b-43-243-192-92.ngrok-free.app/api/course', {
+      const response = await axios.get('http://118.31.112.47:30001/api/course', {
         headers: {
-          'Accept': 'application/json'
+          'mode': 'no-cors'
         }
       });
       
-      const data = response; 
-      // setCourses(data); // 更新状态以使用获取的数据
+      const {data} = response; 
+      setCourses(data); // 更新状态以使用获取的数据
       console.log(data); 
     } catch (error) {
       console.error('获取数据有误:', error);
@@ -134,15 +129,53 @@ const CoursePage = () => {
     setCurrentCourse(null);
   };
 
-  const addCourse = newCourse => {
-    setCourses([...courses, newCourse]);
+  // 新增课程
+  const addCourse = async (newCourse) => {
+    try {
+      const course = {
+        "title": newCourse.title,
+        "credits": newCourse.credits,
+      };
+      console.log(111,course);
+      const response = await axios.post('http://118.31.112.47:30001/api/course', course);
+      console.log('新增课程成功:', response);
+      
+    } catch (error) {
+      console.log('新增课程失败:', error);
+    }
+    fetchData();
   };
 
-  const updateCourse = updatedCourse => {
+  const updateCourse = async (updatedCourse) => {
+    // 更新课程
+    try {
+      console.log(updatedCourse.courseID);
+      const course = {
+        "title": updatedCourse.title,
+        "credits": updatedCourse.credits,
+      }
+      const response = await axios.put(`http://118.31.112.47:30001/api/course/${updatedCourse.courseID}`, course);
+      console.log(response);
+    } catch (error) {
+      console.log('更新课程失败:', error);      
+    }
+
+
     setCourses(courses.map(course => course.courseID === updatedCourse.courseID ? updatedCourse : course));
   };
 
-  const deleteCourse = courseID => {
+  const deleteCourse = async (courseID) => {
+    try {
+      console.log(courseID);
+
+      const response = await axios.delete(`http://118.31.112.47:30001/api/course/${courseID}`);
+      console.log(response);
+      
+    } catch (error) {
+      console.log('删除课程失败:', error);
+    }
+
+
     setCourses(courses.filter(course => course.courseID !== courseID));
   };
 

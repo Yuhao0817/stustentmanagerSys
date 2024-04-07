@@ -1,22 +1,39 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import './index.css'; // 确保CSS文件路径正确
 
 function StudentPage() {
   const [students, setStudents] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [showModal, setShowModal] = useState(false);
-  const [currentStudent, setCurrentStudent] = useState({ name: '', age: '', grade: '' });
+  const [currentStudent, setCurrentStudent] = useState({ lastName: '', credits: '', title: '' });
   const [showMessage, setShowMessage] = useState(false);
   const [message, setMessage] = useState('');
 
+// 假数据
+// const initialStudents = [];
+
   useEffect(() => {
-    const initialStudents = [
-      { id: 1, name: '张三', age: 20, grade: '计算机科学与技术' },
-      { id: 2, name: '李四', age: 19, grade: '软件工程' },
-      { id: 3, name: '王五', age: 21, grade: '信息安全' },
-    ];
-    setStudents(initialStudents);
+    fetchData();
+    
   }, []);
+  const fetchData = async () => {
+    try {
+      const response = await axios.get('http://118.31.112.47:30001/api/student', {
+        headers: {
+          'mode': 'no-cors'
+        }
+      });
+      
+      const { data } = response; 
+      console.log(data); 
+
+      setStudents(data); // 更新状态以使用获取的数据
+
+    } catch (error) {
+      console.error('获取数据有误:', error);
+    }
+  };
 
   // 显示提示信息并自动消失
   const showNotification = (msg) => {
@@ -30,7 +47,7 @@ function StudentPage() {
 
   // 搜索学生信息
   const filteredStudents = students.filter(student =>
-    student.name.toLowerCase().includes(searchTerm.toLowerCase())
+    student.lastName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   // 添加学生信息
@@ -38,13 +55,13 @@ function StudentPage() {
     if (validateStudent(currentStudent)) {
       const newStudent = {
         id: students.length + 1,
-        name: currentStudent.name.trim(),
-        age: parseInt(currentStudent.age, 10),
-        grade: currentStudent.grade.trim(),
+        lastName: currentStudent.lastName.trim(),
+        credits: parseInt(currentStudent.credits, 10),
+        title: currentStudent.title.trim(),
       };
       setStudents([...students, newStudent]);
       setShowModal(false); // 关闭模态框
-      setCurrentStudent({ name: '', age: '', grade: '' }); // 重置当前学生信息
+      setCurrentStudent({ lastName: '', credits: '', title: '' }); // 重置当前学生信息
     }
 };
 
@@ -61,7 +78,7 @@ function StudentPage() {
         setStudents(updatedStudents);
       }
       setShowModal(false); // 关闭模态框
-      setCurrentStudent({ name: '', age: '', grade: '' }); // 重置当前学生信息
+      setCurrentStudent({ lastName: '', credits: '', title: '' }); // 重置当前学生信息
     }
 };
 
@@ -78,7 +95,7 @@ function StudentPage() {
       setCurrentStudent({ ...student });
     } else {
       // 否则，用于添加新学生
-      setCurrentStudent({ name: '', age: '', grade: '' });
+      setCurrentStudent({ lastName: '', credits: '', title: '' });
     }
   };
 
@@ -94,13 +111,13 @@ function StudentPage() {
    // 学生信息验证函数
   const validateStudent = (student) => {
     const errors = [];
-    if (!student.name.trim()) {
+    if (!student.lastName.trim()) {
       errors.push('姓名不能为空。');
     }
-    if (!student.age || isNaN(student.age) || student.age < 0 || student.age > 100) {
-      errors.push('年龄必须在0到100之间。');
+    if (!student.credits || isNaN(student.credits) || student.credits < 0 || student.credits > 100) {
+      errors.push('学分必须在0到100之间。');
     }
-    if (!student.grade.trim()) {
+    if (!student.title.trim()) {
       errors.push('专业不能为空。');
     }
     if (errors.length > 0) {
@@ -125,8 +142,8 @@ function StudentPage() {
           <tr>
             <th>ID</th>
             <th>姓名</th>
-            <th>年龄</th>
-            <th>专业</th>
+            <th>学分</th>
+            <th>学科</th>
             <th>操作</th>
           </tr>
         </thead>
@@ -134,9 +151,9 @@ function StudentPage() {
           {filteredStudents.map(student => (
             <tr key={student.id}>
               <td>{student.id}</td>
-              <td>{student.name}</td>
-              <td>{student.age}</td>
-              <td>{student.grade}</td>
+              <td>{student.lastName}</td>
+              <td>{student.credits}</td>
+              <td>{student.title}</td>
               <td>
                 <button onClick={() => openModal(student)}>编辑</button>
                 <button onClick={() => deleteStudent(student.id)}>删除</button>
@@ -153,15 +170,15 @@ function StudentPage() {
           <form>
             <div>
               <label>姓名:</label>
-              <input type="text" value={currentStudent.name} onChange={(e) => setCurrentStudent({ ...currentStudent, name: e.target.value })} />
+              <input type="text" value={currentStudent.lastName} onChange={(e) => setCurrentStudent({ ...currentStudent, lastName: e.target.value })} />
             </div>
             <div>
-              <label>年龄:</label>
-              <input type="number" value={currentStudent.age} onChange={(e) => setCurrentStudent({ ...currentStudent, age: e.target.value })} />
+              <label>学分:</label>
+              <input type="number" value={currentStudent.credits} onChange={(e) => setCurrentStudent({ ...currentStudent, credits: e.target.value })} />
             </div>
             <div>
               <label>专业:</label>
-              <input type="text" value={currentStudent.grade} onChange={(e) => setCurrentStudent({ ...currentStudent, grade: e.target.value })} />
+              <input type="text" value={currentStudent.title} onChange={(e) => setCurrentStudent({ ...currentStudent, title: e.target.value })} />
             </div>
             <button type="button" onClick={closeModal}>取消</button>
             <button type="button" onClick={currentStudent.id ? editStudent : addStudent}>
