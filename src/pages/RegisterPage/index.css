@@ -25,7 +25,9 @@
   border: 1px solid #ddd;
   border-radius: 4px;
 }
-
+.register-page button{
+  margin-right: 0;
+}
 .register-page button {
   margin-top: 10px;
   padding: 10px;
@@ -35,6 +37,9 @@
   color: white;
   cursor: pointer;
   transition: background-color 0.3s ease;
+}
+.register-page__login-link{
+  width: 100%;
 }
 
 .register-page button:hover {

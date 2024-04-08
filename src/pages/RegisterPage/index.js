@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { registerUser } from '../../api/index'; // 假设的API调用
+import axios from 'axios';
 
 import './index.css';
 
@@ -9,12 +9,22 @@ const RegisterPage = () => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleRegisterAndLogin = async (e) => {
     e.preventDefault();
     try {
-      await registerUser({ username, password });
-      // 注册成功后的处理，例如跳转到登录页面
-      navigate('/login');
+      const user = {
+        username,
+        password,
+      };
+      const response = await axios.get('http://118.31.112.47:30001/api/token/generate', {
+        params: user,
+      });
+      console.log('Register response:', response);
+      const { accessToken, refreshToken } = response.data;
+      // 保存token到localStorage
+      localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('refreshToken', refreshToken);
+      navigate('/login'); // 注册成功后跳转到登录页面
     } catch (error) {
       console.error('Registration failed:', error);
       // 显示错误消息给用户
@@ -23,24 +33,25 @@ const RegisterPage = () => {
 
   return (
     <div className="register-page">
-      <h1>Register</h1>
-      <form onSubmit={handleSubmit}>
+      <h1>注册页面</h1>
+      <form onSubmit={handleRegisterAndLogin}>
         <input
           type="text"
           className="register-page__input"
-          placeholder="Username"
+          placeholder="请输入账号："
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
         <input
           type="password"
           className="register-page__input"
-          placeholder="Password"
+          placeholder="请输入密码："
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button type="submit" className="register-page__button">Register</button>
+        <button type="submit" className="register-page__button">注册</button>
       </form>
+      <button onClick={() => navigate('/login')} className="register-page__login-link">已有账号？去登录</button>
     </div>
   );
 };

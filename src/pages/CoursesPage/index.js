@@ -41,7 +41,7 @@ const CoursesList = ({ courses, onAdd, onUpdate, onDelete, onSearch }) => {
           <tr>
             <th>ID</th>
             <th>课程名称</th>
-            <th>授课教师</th>
+            <th>课程学分</th>
             <th>操作</th>
           </tr>
         </thead>
@@ -79,7 +79,7 @@ const CourseModal = ({ isOpen, onClose, onAdd, onUpdate, course }) => {
         <form onSubmit={handleSubmit}>
           <label>课程名称:</label>
           <input type="text" value={title} onChange={e => setTitle(e.target.value)} required />
-          <label>授课教师:</label>
+          <label>课程学分:</label>
           <input type="text" value={credits} onChange={e => setCredits(e.target.value)} required />
           <button type="submit">{course ? '保存' : '添加'}</button>
         </form>
