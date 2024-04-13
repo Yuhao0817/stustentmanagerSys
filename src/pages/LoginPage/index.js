@@ -13,7 +13,7 @@ const LoginPage = () => {
     const checkToken = () => {
       const accessToken = localStorage.getItem('accessToken');
       if (accessToken) {
-        navigate('/dashboard'); // 假设的主界面路由
+        navigate('/dashboard'); 
       }
     };
 
@@ -44,23 +44,24 @@ const LoginPage = () => {
 
   return (
     <div className="login-page">
-      <h1>登录页面</h1>
+      <h1>Logining Page</h1>
       <form onSubmit={handleLogin}>
         <input
           type="text"
           className="login-input"
-          placeholder="用户名"
+          placeholder="Username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
         <input
           type="password"
           className="login-input"
-          placeholder="密码"
+          placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button type="submit" className="login-button">登录</button>
+        <button type="submit" className="login-button">Login</button>
+        <button onClick={() => navigate('/register')} className="register-button">Don't have an account? Sign up!</button>
       </form>
     </div>
   );

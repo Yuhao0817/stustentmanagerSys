@@ -30,8 +30,8 @@ function MentorPage() {
       console.log(courses);
       setCourseOptions(courses);
     } catch (error) {
-      console.error('获取课程列表失败:', error);
-      setMessage('获取课程列表失败，请重试。');
+      console.error('Failed to get course list:', error);
+      setMessage('Failed to get course list, please try again.');
     }
   };
 
@@ -47,8 +47,8 @@ function MentorPage() {
       setMentors(response.data);
       console.log(response.data);
     } catch (error) {
-      console.error('获取导师数据失败:', error);
-      setMessage('获取导师数据失败，请重试。');
+      console.error('Failed to get tutor data:', error);
+      setMessage('Failed to get tutor data, please try again.');
     }
   };
 
@@ -99,8 +99,8 @@ function MentorPage() {
           id: null
         });
       } catch (error) {
-        console.error('发送数据失败:', error);
-        showNotification('发送数据失败，请重试。');
+        console.error('Failed to send data:', error);
+        showNotification('Failed to send data, please try again.');
       }
     }
   };
@@ -122,8 +122,8 @@ function MentorPage() {
         setShowModal(false);
         setCurrentMentor({ lastName: '', firstMidName: '', hireDate: '', courseID: '', title: '', credits:0, id: null });
       } catch (error) {
-        console.error('更新数据失败:', error);
-        showNotification('更新数据失败，请重试。');
+        console.error('Failed to update data:', error);
+        showNotification('Failed to update data, please try again.');
       }
     }
   };
@@ -137,8 +137,8 @@ function MentorPage() {
       });
       setMentors(mentors.filter(mentor => mentor.id !== mentorId));
     } catch (error) {
-      console.error('删除导师信息失败:', error);
-      showNotification('删除导师信息失败，请重试。');
+      console.error('Failed to delete tutor information:', error);
+      showNotification('Failed to delete tutor information, please try again.');
     }
   };
 
@@ -172,13 +172,13 @@ function MentorPage() {
   const validateMentor = (mentor) => {
     const errors = [];
     if (!mentor.lastName.trim()) {
-      errors.push('姓不能为空。');
+      errors.push('The lastName cannot be empty.');
     }
     if (!mentor.firstMidName.trim()) {
-      errors.push('名称不能为空。');
+      errors.push('The firstMidName cannot be empty.');
     }
     if (!mentor.hireDate) {
-      errors.push('聘用日期不能为空。');
+      errors.push('The hireDate cannot be empty.');
     }
     // if (!mentor.courseID) {
     //   errors.push('课程ID不能为空。');
@@ -193,7 +193,7 @@ function MentorPage() {
   // 渲染课程下拉选择框
   const renderCourseSelect = () => (
     <select value={currentMentor.courseID} onChange={(e) => setCurrentMentor({ ...currentMentor, courseID: e.target.value })}>
-      <option value="">请选择课程</option>
+      <option value="">Please select a course</option>
       {courseOptions.map(option => (
         <option key={option.value} value={option.value}>
           {option.label}
@@ -209,12 +209,12 @@ function MentorPage() {
         <thead>
           <tr>
             <th>ID</th>
-            <th>姓</th>
-            <th>名称</th>
-            <th>聘用日期</th>
-            <th>课程</th>
-            <th>学分</th>
-            <th>操作</th>
+            <th>lastname</th>
+            <th>firstMidName</th>
+            <th>hireDate</th>
+            <th>course</th>
+            <th>credits</th>
+            <th>action</th>
           </tr>
         </thead>
         <tbody>
@@ -227,8 +227,8 @@ function MentorPage() {
               <td>{mentor.title}</td>
               <td>{mentor.credits}</td>
               <td>
-                <button onClick={() => openModal(mentor)}>编辑</button>
-                <button onClick={() => deleteMentor(mentor.id)}>删除</button>
+                <button onClick={() => openModal(mentor)}>modify</button>
+                <button onClick={() => deleteMentor(mentor.id)}>delete</button>
               </td>
             </tr>
           ))}
@@ -239,45 +239,45 @@ function MentorPage() {
 
   return (
     <div>
-      <input type="text" placeholder="输入姓名搜索导师信息" value={searchTerm} onChange={handleSearchChange} />
+      <input type="text" placeholder="Enter your name to search for tutor information" value={searchTerm} onChange={handleSearchChange} />
       {showMessage && <div className="notification">{message}</div>}
       {renderMentorTable()}
       {showModal && (
         <div className="modal">
-          <h2>{currentMentor.id ? '编辑' : '添加'} 导师信息</h2>
+          <h2>{currentMentor.id ? 'modify' : 'add'} Tutor information</h2>
           <form>
             <div>
-              <label>姓:</label>
+              <label>lastName:</label>
               <input type="text" value={currentMentor.lastName} onChange={(e) => setCurrentMentor({ ...currentMentor, lastName: e.target.value })} />
             </div>
             <div>
-              <label>名称:</label>
+              <label>firstMidName:</label>
               <input type="text" value={currentMentor.firstMidName} onChange={(e) => setCurrentMentor({ ...currentMentor, firstMidName: e.target.value })} />
             </div>
             <div>
-              <label>聘用日期:</label>
+              <label>hireDate:</label>
               <input type="date" value={currentMentor.hireDate} onChange={(e) => setCurrentMentor({ ...currentMentor, hireDate: e.target.value })} />
             </div>
             { !currentMentor.id && (
               <>
                 <div>
-                  <label>课程:</label>
+                  <label>course:</label>
                   {renderCourseSelect()}
                 </div>
                 <div>
-                  <label>课程标题:</label>
+                  <label>title:</label>
                   <input type="text" value={currentMentor.title} onChange={(e) => setCurrentMentor({ ...currentMentor, title: e.target.value })} />
               </div>
               </>
             )}
-            <button type="button" onClick={closeModal}>取消</button>
+            <button type="button" onClick={closeModal}>cancel</button>
             <button type="button" onClick={currentMentor.id ? editMentor : addMentor}>
-            {currentMentor.id ? '更新' : '添加'}
+            {currentMentor.id ? 'modify' : 'add'}
             </button>
           </form>
         </div>                         
       )}
-      <button onClick={() => openModal(null)}>添加导师</button>
+      <button onClick={() => openModal(null)}>Add Mentor</button>
 </div>
 );
 }

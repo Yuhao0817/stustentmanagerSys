@@ -45,3 +45,6 @@
 .register-page button:hover {
   background-color: #4cae4c;
 }
+.register-button{
+  margin-top: 15px;
+}

@@ -33,25 +33,25 @@ const RegisterPage = () => {
 
   return (
     <div className="register-page">
-      <h1>注册页面</h1>
+      <h1>Registration page</h1>
       <form onSubmit={handleRegisterAndLogin}>
         <input
           type="text"
           className="register-page__input"
-          placeholder="请输入账号："
+          placeholder="Please enter the account number:"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
         <input
           type="password"
           className="register-page__input"
-          placeholder="请输入密码："
+          placeholder="Please enter your password:"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button type="submit" className="register-page__button">注册</button>
+        <button type="submit" className="register-page__button">register</button>
       </form>
-      <button onClick={() => navigate('/login')} className="register-page__login-link">已有账号？去登录</button>
+      <button onClick={() => navigate('/login')} className="register-page__login-link">Already have an account? Log in!</button>
     </div>
   );
 };

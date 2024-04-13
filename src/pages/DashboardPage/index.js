@@ -15,7 +15,7 @@ const DashboardPage = () => {
     <div className="dashboard-container">
       {/* 顶部标题栏 */}
       <header className="dashboard-header">
-        <h1>学生管理系统</h1>
+        <h1>Student Management System</h1>
         <img src={userAvatar} alt="User Avatar" className="dashboard-avatar" />
       </header>
 
@@ -24,9 +24,10 @@ const DashboardPage = () => {
         {/* 左侧导航栏 */}
         <nav className="dashboard-nav">
           <ul>
-          <li onClick={() => handleNavigation('/dashboard/students')}>学生管理</li>
-            <li onClick={() => handleNavigation('/dashboard/courses')}>课程管理</li>
-            <li onClick={() => handleNavigation('/dashboard/mentors')}>导师管理</li>
+          <li onClick={() => handleNavigation('/dashboard/students')}>Student management</li>
+            <li onClick={() => handleNavigation('/dashboard/courses')}>Course management</li>
+            <li onClick={() => handleNavigation('/dashboard/mentors')}>Mentor management</li>
+            <li onClick={() => handleNavigation('/dashboard/email')}>Send email</li>
           </ul>
         </nav>
 
