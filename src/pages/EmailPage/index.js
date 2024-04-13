@@ -11,7 +11,7 @@ const EmailPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(receiver); if (!isValidEmail) {
-      setError('请输入有效的邮箱地址');
+      setError('Please enter a valid email address');
       return;
     }
     // 开始加载，设置 isLoading 为 true
@@ -26,7 +26,7 @@ const EmailPage = () => {
       const url = 'http://118.31.112.47:30001/api/email?' + queryParams.toString();
       const response = await axios.post(url);
       console.log(response);
-      setError('邮件发送成功');
+      setError('The email was sent successfully');
       // 清空原先的内容    
       setSubject('');
       setHtmlContent('');
@@ -41,7 +41,7 @@ const EmailPage = () => {
 
     } catch (err) {
       console.error(err);
-      setError('邮件发送失败');
+      setError('The message failed to be sent');
       // 设置 isLoading 为 false
       setIsLoading(false);
 
@@ -66,10 +66,10 @@ const EmailPage = () => {
         color: '#333',
         textAlign: 'center',
         marginBottom: '15px'
-      }}>邮件发送页面</h1>
+      }}>Email sending page</h1>
       <form onSubmit={handleSubmit} style={{ width: '100%' }}>
         <div style={{ marginBottom: '15px' }}>
-          <label style={{ display: 'block', marginBottom: '5px' }}>邮件主题:</label>
+          <label style={{ display: 'block', marginBottom: '5px' }}>The subject of the message:</label>
           <input 
             type="text" 
             value={subject} 
@@ -85,7 +85,7 @@ const EmailPage = () => {
           />
         </div>
         <div style={{ marginBottom: '15px' }}>
-          <label style={{ display: 'block', marginBottom: '5px' }}>邮件内容:</label>
+          <label style={{ display: 'block', marginBottom: '5px' }}>The content of the message:</label>
           <textarea 
             value={htmlContent} 
             onChange={(e) => setHtmlContent(e.target.value)} 
@@ -101,7 +101,7 @@ const EmailPage = () => {
           />
         </div>
         <div style={{ marginBottom: '15px' }}>
-          <label style={{ display: 'block', marginBottom: '5px' }}>收件人邮箱:</label>
+          <label style={{ display: 'block', marginBottom: '5px' }}>Recipient's email address:</label>
           <input 
             type="email" 
             value={receiver} 
@@ -115,7 +115,7 @@ const EmailPage = () => {
               fontSize: '16px'
             }}
           />
-          {isLoading && <div style={{ textAlign: 'center', marginTop: '10px' }}>加载中...</div>}
+          {isLoading && <div style={{ textAlign: 'center', marginTop: '10px' }}>Loading...</div>}
           {error && <p style={{ color: 'red', marginTop: '5px' }}>{error}</p>}
         </div>
         <button type="submit" style={{ 
@@ -128,7 +128,7 @@ const EmailPage = () => {
           cursor: 'pointer', 
           fontSize: '18px',
           marginTop: '15px'
-        }}>{isLoading ? '发送中...' : '发送邮件'}</button>
+        }}>{isLoading ? 'Sending...' : 'Send an email'}</button>
       </form>
     </div>
   );
